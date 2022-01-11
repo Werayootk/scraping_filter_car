@@ -1,0 +1,24 @@
+{
+  "name": "scraping_filter_car",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Werayootk/scraping_filter_car.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Werayootk/scraping_filter_car/issues"
+  },
+  "homepage": "https://github.com/Werayootk/scraping_filter_car#readme",
+  "dependencies": {
+    "nodemon": "^2.0.15",
+    "puppeteer": "^13.0.1"
+  }
+}

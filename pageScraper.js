@@ -1,26 +1,22 @@
 const fs = require("fs");
 const path = require("path");
 const client = require("https");
+const axios = require('axios');
 
 //save image file car example
-function downloadImage(url, filepath) {
-  return new Promise((resolve, reject) => {
-    client.get(url, (res) => {
-      if (res.statusCode === 200) {
-        res
-          .pipe(fs.createWriteStream(filepath))
-          .on("error", reject)
-          .once("close", () => resolve(filepath));
-      } else {
-        // Consume response data to free up memory
-        res.resume();
-        reject(
-          new Error(`Request Failed With a Status Code: ${res.statusCode}`)
-        );
-      }
-    });
-  });
-}
+const download_image = (url, image_path) =>
+  axios({
+    url,
+    responseType: 'stream',
+  }).then(
+    response =>
+      new Promise((resolve, reject) => {
+        response.data
+          .pipe(fs.createWriteStream(image_path))
+          .on('finish', () => resolve())
+          .on('error', e => reject(e));
+      }),
+  );
 
 const scraperObject = {
   url: "https://search.drivehub.co/?booking_begin=2022-01-16%2010%3A00&booking_end=2022-01-31%2010%3A00&dealers=&from=from_homepage&location_id=3&sort_by=price#openFilter",
@@ -46,13 +42,15 @@ const scraperObject = {
         return items;
       }
     );
-      
-                  const text = carsType[0].path;
-                  const pattern = /car[_].*/gm;
-                  const pathFileImg = text.match(pattern);
-      console.log(pathFileImg);
-      
 
+    //save img
+    for (let i = 0; i < carsType.length; i++) {      
+      const text = carsType[i].path;
+      console.log(text);
+      const pattern = /car[_].*/gm;
+      const nameFileImg = text.match(pattern);
+      await download_image(text, nameFileImg);
+    }
     
     //save to json file
     fs.writeFile("cartype.json", JSON.stringify(carsType), (err) => {
